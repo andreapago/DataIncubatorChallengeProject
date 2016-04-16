@@ -182,6 +182,7 @@ def plotTimeSeriesNewsScore(timeSeriesScore,symbol):
     plt.ylabel("Sentiment Score (SentiWordNet scale)")
     #plt.ion()
     plt.draw()
+    fig.savefig(symbol+"ScoreTS.png")
     #plt.show()
 
 
@@ -207,6 +208,7 @@ def plotTimeSeriesPrice(timeSeriesPrice,symbol):
     plt.ylabel("Price (USD)")
     #
     plt.draw()
+    fig.savefig(symbol + "PriceTS.png")
     #plt.show()
 
 
@@ -277,9 +279,10 @@ def plotPriceNewsScorePlot(synchPriceNewsDict, symbol):
     plt.scatter(x, y)
     params = computeCorrelation(synchPriceNewsDict)
     y2 = map(lambda x2:params[0]*x2+params[1],x)
-    plt.plot(x,y2)
+    plt.plot(x,y2, label="Linear Regression fit")
+    plt.legend()
 
-
+    fig.savefig(symbol + "PriceNews.png")
 
     plt.draw()
 
@@ -319,6 +322,5 @@ def scrapDWJI30Symbols():
 
 
 #Execution main program
-scrapDWJI30Symbols()
 main()
 raw_input("Press enter when done...")
