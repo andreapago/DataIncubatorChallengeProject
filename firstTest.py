@@ -49,8 +49,9 @@ def main():
     symbolList = scrapDWJI30Symbols()
     resultsDict = stockTwitsInfoRequest(symbolList[:4])
     #print resultsDict
-    timeScoreList = []
+
     for symbol in symbolList[:4]:
+        timeScoreList = []
         listNews = parseJSON(resultsDict[symbol])
         for newsItem in listNews:
             #print newsItem.news
