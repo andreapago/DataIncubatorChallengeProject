@@ -21,16 +21,18 @@ The dream is to make a system that can use the wisdom of the crowd to predict th
 6)Correlation between stock price and news score is performed.    
 7)Plots are drawn of time series news score, time series stock price (minute-by-minute transactions), scatter plot news score vs. stock price with linear regression fit.
 
-###Current Limitations:
+###Current Limitations and Future Works:
 The following limitations are known and the goal is to address them during the 8-week program at Data Incubator.  
 1)Stocktwits provides free of charge maximum 30 messages concerning a stock of interest. Possible solution: have a paid agreement with stocktwits (available in stocktwits premium services) for more messages.  
 2)News and messages source is stocktwits. Possible solution: include other sources Seeking Alpha, Twitter, Facebook are likely candidates.  
 3)Stock price feed of Yahoo is not for every transaction taking place on the market (but more likely a minute value). Possible solution: there are paid subscription services available with real-time services (also mentioned in the Data Incubator page is Quandl that offers this subscription).  
 4)SentiWordNet should be extended with terms typical of financial word to stress their meaning. Possible solution: create ad-hoc dictionary with help of financial market experts.  
 5)Synchronization of messages during non trading time. Possible solution: make a special score for that non-trading periods.  
-6)Use some more sophisticated indicator than simple correlation coefficient. Possible solution: investigate non linear relationships and threshold effects.  
+6)Use some more sophisticated indicator than simple correlation coefficient. Possible solution: investigate non linear relationships and threshold effects. Test the fitting of non linear models to the data, in addition consider the integration of stochastic models in the prediction of variation.  
 7)Use of Dow Jones Industrial 30 stock symbols. Possible solution: easily expandable to more markets.  
 8)No distinction of user posting news or messages. Possible solution: provide ranking of users based on their posts and their influence of the price of the stock.  
+9)The effects of delay (or anticipation) in the response of the market to the sentiment are not taken into account. Possible solution: consider a lag-based approach in computing correlations between the sentiment and the stock price.  
+10)The analysis of volume exchange is not considered. Possible solution: investigate the relationship of the sentiment with the volume of shares exchaged as an additional element to take into account. 
 
 ###The scientific background:
 There are scientific publications investigating this sort of approach of extracting the mood of messages to predict the stock market. Some non-exhaustive references are:  
