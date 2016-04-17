@@ -7,6 +7,7 @@ import collections
 import bisect
 import numpy as np
 from scipy import stats
+from matplotlib import dates
 
 ##from stocktwits
 def stockTwitsInfoRequest(symbolList):
@@ -57,11 +58,11 @@ def main():
             #print "score: " + str(scoreNews(newsItem.news, dictScore))
             timedScore = ComputedScoreTimed(scoreNews(newsItem.news, dictScore), newsItem.timestamp)
             timeScoreList.append(timedScore)
-        #plotTimeSeriesNewsScore(timeScoreList,symbol)
+        plotTimeSeriesNewsScore(timeScoreList,symbol)
         stockPriceDict = stockQuoteRequest(symbol)
         #for symbol in symbolList:
         timePriceList = parseJSONStockPrice(stockPriceDict[symbol])
-        #plotTimeSeriesPrice(timePriceList,symbol)
+        plotTimeSeriesPrice(timePriceList,symbol)
         timeSeriesNewsScoreDict = getTimeSeriesNewsScore(timeScoreList)
         timeSeriesPrice = getTimeSeriesPrice(timePriceList)
         syncronizedPriceScoreDict = synchronizeNewsScorePrice(timeSeriesNewsScoreDict,timeSeriesPrice)
@@ -177,6 +178,18 @@ def plotTimeSeriesNewsScore(timeSeriesScore,symbol):
     y = map(lambda x: x.score, timeSeriesScore)
     fig = plt.figure()
     fig.suptitle('Stock Sentiment: ' + symbol, fontsize=14, fontweight='bold')
+
+    days = dates.DayLocator()
+    hours = dates.HourLocator()
+    dfmt = dates.DateFormatter('%b %d %H:%M')
+    ax = fig.add_subplot(111)
+    ax.xaxis.set_major_locator(days)
+    ax.xaxis.set_major_formatter(dfmt)
+    ax.xaxis.set_minor_locator(hours)
+
+    plt.tick_params(axis='x', which='major', labelsize=8)
+
+
     plt.plot(xx, y)
     plt.xlabel("Date and Time")
     plt.ylabel("Sentiment Score (SentiWordNet scale)")
@@ -204,6 +217,19 @@ def plotTimeSeriesPrice(timeSeriesPrice,symbol):
     fig = plt.figure()
     fig.suptitle('Stock Price: '+symbol, fontsize=14, fontweight='bold')
     plt.plot(x, y)
+
+    days = dates.DayLocator()
+    hours = dates.HourLocator()
+    minutes = dates.MinuteLocator()
+    dfmt = dates.DateFormatter('%b %d %H:%M')
+    ax = fig.add_subplot(111)
+    ax.xaxis.set_major_locator(hours)
+    ax.xaxis.set_major_formatter(dfmt)
+    ax.xaxis.set_minor_locator(minutes)
+    plt.tick_params(axis='x', which='major', labelsize=8)
+
+
+
     plt.xlabel("Time (CET timezone)")
     plt.ylabel("Price (USD)")
     #
