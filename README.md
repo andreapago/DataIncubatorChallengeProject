@@ -18,7 +18,7 @@ The dream is to make a system that can use the wisdom of the crowd to predict th
     2) Messages concerning the stock of interest are retrieved by the financial microblogging stocktwits (http://http://stocktwits.com) by using the provided interface service i.e., REST API (http://stocktwits.com/developers).  
     3) For each message retrieved concerning the stock of interest the content is analyzed word-by-word. In order to find the sentiment of each word I use a dictionary with words (i.e., SentiWordNet) and a sentiment score. SentiWordNet that is a lexical resource for opinion mining. SentiWordNet assigns to each word of the WordNet dictionary (http://wordnet.princeton.edu/) three sentiment scores: positivity, negativity, objectivity. Details of SentiWordNet can be found at http://sentiwordnet.isti.cnr.it/. At the moment the scores of each word (i.e., term) of each message are summed up (since single words have positive and negative values defining the sentiment) to get a single score for the whole message.  
     4) For the stock of interest the minute-by-minute price is retrieved by scraping the yahoo financial services(http://chartapi.finance.yahoo.com/instrument/1.0/STOCKSYMBOL/chartdata;type=quote;range=1d/json).  
-    5) The news scores time series is synchronized with the price time series in order to have the pairs of news score and stock price. If news are issued in a timestamp where there is no trading, the synchronization is done to the closest timestamp when a stock price is available.
+    5) The news scores time series is synchronized with the price time series in order to have the pairs of news score and stock price. If news are issued in a timestamp where there is no trading, the synchronization is done to the closest timestamp when a stock price is available.  
     6) Correlation between stock price and news score is performed.  
     7) Plots are drawn of time series news score, time series stock price (minute-by-minute transactions), scatter plot news score vs. stock price with linear regression fit.
 
@@ -32,8 +32,7 @@ The following limitations are known and the goal is to address them during the 8
     5) Synchronization of messages during non trading time. Possible solution: make a special score for that non-trading periods.  
     6) Use some more sophisticated indicator than simple correlation coefficient. Possible solution: investigate non linear relationships and threshold effects. Test the fitting of non-linear models to the data. In addition, consider the integration of stochastic models in the prediction of variation.  
     7) Use of Dow Jones Industrial 30 stock symbols. Possible solution: easily expandable to more markets.  
-    8) No distinction of user posting news or messages. Possible solution: provide ranking of users based on their posts and their influence of the price of the stock.
-The following limitations are known and the goal is to address them during the 8-week program at Data Incubator.  
+    8) No distinction of user posting news or messages. Possible solution: provide ranking of users based on their posts and their influence of the price of the stock.  
 9)The effect of delay (or anticipation) in the response of the market to the sentiment are not taken into account. Possible solution: consider a lag-based approach in computing correlations between the sentiment and the stock price.  
 10)The analysis of volume exchange is not considered. Possible solution: investigate the relationship of the sentiment with the volume of shares exchanged as an additional element to take into account.  
 
