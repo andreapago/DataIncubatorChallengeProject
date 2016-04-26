@@ -8,6 +8,9 @@ import bisect
 import numpy as np
 from scipy import stats
 from matplotlib import dates
+#import matplotlib
+
+#matplotlib.use('Agg')
 
 ##from stocktwits
 def stockTwitsInfoRequest(symbolList):
@@ -45,24 +48,26 @@ def stockQuoteRequest(symbol):
 def main():
     #dictionary is a one time operation to be put in memory
     dictScore = loadSentimentDictionary("./dict/SentiWordNet_3.0.0_20130122.txt")
-    #symbolList = ["MSFT"]
-    symbolList = scrapDWJI30Symbols()
-    resultsDict = stockTwitsInfoRequest(symbolList[:4])
+    symbolList = ["IBM"]
+    #symbolList = scrapDWJI30Symbols()
+    resultsDict = stockTwitsInfoRequest(symbolList)
     #print resultsDict
 
-    for symbol in symbolList[:4]:
+    for symbol in symbolList:
         timeScoreList = []
         listNews = parseJSON(resultsDict[symbol])
         for newsItem in listNews:
             #print newsItem.news
-            #print newsItem.timestamp
+            print newsItem.timestamp
             #print "score: " + str(scoreNews(newsItem.news, dictScore))
             timedScore = ComputedScoreTimed(scoreNews(newsItem.news, dictScore), newsItem.timestamp)
             timeScoreList.append(timedScore)
         plotTimeSeriesNewsScore(timeScoreList,symbol)
         stockPriceDict = stockQuoteRequest(symbol)
+        #print stockPriceDict
         #for symbol in symbolList:
         timePriceList = parseJSONStockPrice(stockPriceDict[symbol])
+        #print THE ELEMENT OF THE LIST
         plotTimeSeriesPrice(timePriceList,symbol)
         timeSeriesNewsScoreDict = getTimeSeriesNewsScore(timeScoreList)
         timeSeriesPrice = getTimeSeriesPrice(timePriceList)
@@ -97,7 +102,7 @@ class ComputedScoreTimed:
 class StockPrice:
     def __init__(self, price, timestamp):
         self.price = price
-        self.timestamp = timestamp
+        self.timestamp = datetime.utcfromtimestamp(timestamp)
 
 
 
@@ -169,7 +174,7 @@ def scoreNews(news,corpusScore):
 def plotTimeSeriesNewsScore(timeSeriesScore,symbol):
     timeSeriesScore.sort(key=lambda x: x.timestamp, reverse=False)
 
-    plt.ion()
+
     # x = np.array([datetime.datetime(2013, 9, 28, i, 0) for i in range(24)])
     # y = np.random.randint(100, size=x.shape)
     #
@@ -194,9 +199,10 @@ def plotTimeSeriesNewsScore(timeSeriesScore,symbol):
     plt.plot(xx, y)
     plt.xlabel("Date and Time")
     plt.ylabel("Sentiment Score (SentiWordNet scale)")
+
     #plt.ion()
-    plt.draw()
     fig.savefig(symbol+"ScoreTS.png")
+    plt.draw()
     #plt.show()
 
 
@@ -211,9 +217,9 @@ def getTimeSeriesNewsScore(timeSeriesScore):
     return dictionary
 
 def plotTimeSeriesPrice(timeSeriesPrice,symbol):
-    plt.ion()
+    #plt.ion()
     #x = map(lambda x:datetime.fromtimestamp((item[0] for item in x.keys())).strftime('%Y-%m-%d %H:%M:%S'),timeSeriesPrice)
-    x = map(lambda x: datetime.fromtimestamp(x.timestamp),timeSeriesPrice)
+    x = map(lambda x: x.timestamp,timeSeriesPrice)
     y = map(lambda x: x.price,timeSeriesPrice)
     fig = plt.figure()
     fig.suptitle('Stock Price: '+symbol, fontsize=14, fontweight='bold')
@@ -231,7 +237,7 @@ def plotTimeSeriesPrice(timeSeriesPrice,symbol):
 
 
 
-    plt.xlabel("Time (CET timezone)")
+    plt.xlabel("Time (ZULU timezone)")
     plt.ylabel("Price (USD)")
     #
     plt.draw()
@@ -240,14 +246,14 @@ def plotTimeSeriesPrice(timeSeriesPrice,symbol):
 
 
 def getTimeSeriesPrice(timeSeriesPrice):
-    x = map(lambda x: datetime.fromtimestamp(x.timestamp), timeSeriesPrice)
+    x = map(lambda x: x.timestamp, timeSeriesPrice)
     y = map(lambda x: x.price, timeSeriesPrice)
     dictionary = dict(zip(x, y))
     #print "dictionary done"
     return dictionary
 
 def synchronizeNewsScorePrice(newsScoreDict,priceDict):
-    plt.ion()
+    #plt.ion()
     timestampsNews = newsScoreDict.keys()
     od = collections.OrderedDict(sorted(priceDict.items()))
     synchPriceNewsDict = {}
@@ -294,6 +300,7 @@ def synchronizeNewsScorePrice(newsScoreDict,priceDict):
 
 
 def plotPriceNewsScorePlot(synchPriceNewsDict, symbol):
+    #plt.ion
     x = []
     y = []
     for item in synchPriceNewsDict:
@@ -309,9 +316,12 @@ def plotPriceNewsScorePlot(synchPriceNewsDict, symbol):
     plt.plot(x,y2, label="Linear Regression fit")
     plt.legend()
 
-    fig.savefig(symbol + "PriceNews.png")
 
+    plt.ion()
+    fig.savefig(symbol + "PriceNews.png")
     plt.draw()
+    plt.show()
+
 
 def printCorrelationResult(synchPriceNewsDict,firstNewsTime,lastNewsTime,symbol):
     params = computeCorrelation(synchPriceNewsDict)
