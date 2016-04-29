@@ -51,10 +51,10 @@ def main():
     dictScore = loadSentimentDictionary("./dict/SentiWordNet_3.0.0_20130122.txt")
     #symbolList = ["IBM"]
     symbolList = scrapDWJI30Symbols()
-    resultsDict = stockTwitsInfoRequest(symbolList[0:3])
+    resultsDict = stockTwitsInfoRequest(symbolList[0:4])
     #print resultsDict
 
-    for symbol in symbolList[0:3]:
+    for symbol in symbolList[0:4]:
         timeScoreList = []
         listNews = parseJSON(resultsDict[symbol])
         for newsItem in listNews:
