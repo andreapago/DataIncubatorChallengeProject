@@ -8,6 +8,7 @@ import bisect
 import numpy as np
 from scipy import stats
 from matplotlib import dates
+import time
 #import matplotlib
 
 #matplotlib.use('Agg')
@@ -48,17 +49,17 @@ def stockQuoteRequest(symbol):
 def main():
     #dictionary is a one time operation to be put in memory
     dictScore = loadSentimentDictionary("./dict/SentiWordNet_3.0.0_20130122.txt")
-    symbolList = ["IBM"]
-    #symbolList = scrapDWJI30Symbols()
-    resultsDict = stockTwitsInfoRequest(symbolList)
+    #symbolList = ["IBM"]
+    symbolList = scrapDWJI30Symbols()
+    resultsDict = stockTwitsInfoRequest(symbolList[0:3])
     #print resultsDict
 
-    for symbol in symbolList:
+    for symbol in symbolList[0:3]:
         timeScoreList = []
         listNews = parseJSON(resultsDict[symbol])
         for newsItem in listNews:
             #print newsItem.news
-            print newsItem.timestamp
+            #print newsItem.timestamp
             #print "score: " + str(scoreNews(newsItem.news, dictScore))
             timedScore = ComputedScoreTimed(scoreNews(newsItem.news, dictScore), newsItem.timestamp)
             timeScoreList.append(timedScore)
@@ -320,7 +321,9 @@ def plotPriceNewsScorePlot(synchPriceNewsDict, symbol):
     plt.ion()
     fig.savefig(symbol + "PriceNews.png")
     plt.draw()
+    plt.pause(0.0001) #need pause in order to redraw
     plt.show()
+
 
 
 def printCorrelationResult(synchPriceNewsDict,firstNewsTime,lastNewsTime,symbol):
@@ -360,4 +363,5 @@ def scrapDWJI30Symbols():
 
 #Execution main program
 main()
+time.sleep(2)
 raw_input("Press enter when done...")
